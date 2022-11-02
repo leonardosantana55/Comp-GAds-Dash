@@ -108,7 +108,7 @@ def parse_parts(service, parts, folder_name, message):
                 filepath = os.path.join(folder_name, filename)
                 print("Saving HTML to", filepath)
                 with open(filepath, "wb") as f:
-                    f.write(urlsafe_b64decode(data))
+                    #f.write(urlsafe_b64decode(data))
                     global dados
                     dados = urlsafe_b64decode(data)
             else:
@@ -128,7 +128,7 @@ def parse_parts(service, parts, folder_name, message):
                             filepath = os.path.join(folder_name, filename)
                             if data:
                                 with open(filepath, "wb") as f:
-                                    f.write(urlsafe_b64decode(data))
+                                    #f.write(urlsafe_b64decode(data))
                                     dados = urlsafe_b64decode(data)
                     
 
@@ -168,38 +168,47 @@ def read_message(service, message):
                 folder_name = clean(value)
                 # we will also handle emails with the same subject name
                 folder_counter = 0
-                while os.path.isdir(folder_name):
-                    folder_counter += 1
+                #while os.path.isdir(folder_name):
+                #    folder_counter += 1
                     # we have the same folder name, add a number next to it
-                    if folder_name[-1].isdigit() and folder_name[-2] == "_":
-                        folder_name = f"{folder_name[:-2]}_{folder_counter}"
-                    elif folder_name[-2:].isdigit() and folder_name[-3] == "_":
-                        folder_name = f"{folder_name[:-3]}_{folder_counter}"
-                    else:
-                        folder_name = f"{folder_name}_{folder_counter}"
-                os.mkdir(folder_name)
+                #    if folder_name[-1].isdigit() and folder_name[-2] == "_":
+                #        folder_name = f"{folder_name[:-2]}_{folder_counter}"
+                #    elif folder_name[-2:].isdigit() and folder_name[-3] == "_":
+                #        folder_name = f"{folder_name[:-3]}_{folder_counter}"
+                #    else:
+                #        folder_name = f"{folder_name}_{folder_counter}"
+                #os.mkdir(folder_name)
                 print("Subject:", value)
             if name.lower() == "date":
                 # we print the date when the message was sent
                 print("Date:", value)
-    if not has_subject:
+    #if not has_subject:
         # if the email does not have a subject, then make a folder with "email" name
         # since folders are created based on subjects
-        if not os.path.isdir(folder_name):
-            os.mkdir(folder_name)
+        #if not os.path.isdir(folder_name):
+            #os.mkdir(folder_name)
     parse_parts(service, parts, folder_name, message)
     print("="*50)
 
 
 
     # get emails that match the query you specify
-q =  'from:ads-account-noreply@google.com subject:palavras-chave'
+q =  'from:ads-account-noreply@google.com subject:intelbras-redes'
 results = search_messages(service, q)
 print(f"Found {len(results)} results.")
 # for each email matched, read it (output plain/text to console & save HTML and attachments)
 for msg in results:
     read_message(service, msg)
-print(dados)
+
+
+from bs4 import BeautifulSoup
+
+sopa = BeautifulSoup(dados,"html.parser")
+
+allLinks = sopa.find_all('a', href=True)
+link = allLinks[2].get('href')
+
+os.system(f"start \"\" {link}")
 
 
 
