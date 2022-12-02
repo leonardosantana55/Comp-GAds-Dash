@@ -36,7 +36,7 @@ df = df.replace("--",0, regex=True)
 df = df.replace("< 10",0, regex=True)
 
 from sqlalchemy import create_engine
-engine = create_engine("mysql://root:Ficalig4d0@35.199.90.161/comp-gads-dash?charset=utf8mb4")
+engine = create_engine("mysql://guest:123456@35.199.90.161/comp-gads-dash?charset=utf8mb4")
 
 df.to_sql('intelbrasredes', engine, if_exists='append', index=False)
 pd.read_sql('intelbrasredes', engine)
